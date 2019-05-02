@@ -29,7 +29,19 @@ Whil read path; do
 	lftp -u $USER,$PASSWORD -e 'mirror -P10 --continue --size-range=0-9M $path $LOCAL_DIR && bye' $HOST
 done < filepaths_to_mirror.txt
 
-# miscalnious
+# file_permission issue:
+
+lftp <<EOF
+# the next 3 lines put you in ftpes mode. Uncomment if you are having trouble connecting.
+#set ftp:ssl-allow no
+#set ftp:passive-mode true
+#set ftp:list-options -a
+open -u [user],[password] [host]
+# changing file permissions starts now...
+chmod 777 /public_html/images/cache/thanos.jpeg
+EOF
+
+# miscellaneous:
 
 lftp_rc
 should do it.
