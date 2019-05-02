@@ -1,0 +1,45 @@
+# General mirror
+
+USER=""
+PASSWORD=""
+HOST=""
+REMOTE_DIR=""
+LOCAL_DIR=""
+
+lftp -u "$USER","$PASSWORD" $HOST <<EOF
+# the next 3 lines put you in ftpes mode. Uncomment if you are having trouble connecting.
+# set ftp:ssl-force true
+# set ftp:ssl-protect-data true
+# set ssl:verify-certificate no
+# transfer starts now...
+mirror -P10 --size-range=0-9M $REMOTE_DIR $LOCAL_DIR && bye;
+exit
+EOF
+
+# include-glob:
+
+lftp -u $USER,$PASSWORD -e 'mirror -P10 --continue --size-range=0-9M $REMOTE_DIR --include-glob "*.js" $LOCAL_DIR && bye' $HOST
+
+# exclude:
+
+lftp -u $USER,$PASSWORD -e 'mirror -P10 --continue --size-range=0-9M $REMOTE_DIR --exclude path/or/file $LOCAL_DIR && bye' $HOST
+
+# Some files alone by giving the paths:
+Whil read path; do
+	lftp -u $USER,$PASSWORD -e 'mirror -P10 --continue --size-range=0-9M $path $LOCAL_DIR && bye' $HOST
+done < filepaths_to_mirror.txt
+
+# miscalnious
+
+lftp_rc
+should do it.
+
+If this doesn't work try adding to your /etc/lftp.conf the following lines:
+
+set ftp:ssl-protect-data true
+set ftp:ssl-force true
+set ftp:ssl-auth TLS
+set ssl:verify-certificate no
+
+# cache flush
+# ls | tr "\n" " "
