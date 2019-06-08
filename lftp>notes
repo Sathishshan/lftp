@@ -55,3 +55,22 @@ set ssl:verify-certificate no
 
 # cache flush
 # ls | tr "\n" " "
+
+
+#lftp mirror [mget] file alone, by specifing absolute paths in a file.
+#!/bin/bash
+USER=""
+PASSWORD=""
+HOST=""
+REMOTE_FILE="$1"
+LOCAL_DIR=""
+PORT=""
+
+cat $1 | while read line
+do
+
+lftp ftp://${USER}:${PASSWORD}@${HOST}:${PORT} -e "set net:timeout 10; set ftp:ssl-allow no; mget -c $line; bye"
+#if your are using sftp, please comment above line and un comment the below line.
+#lftp sftp://${USER}:${PASSWORD}@${HOST}:${PORT} -e "set net:timeout 10; set ftp:ssl-allow no; mget -c $line; bye"
+done
+
