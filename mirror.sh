@@ -39,3 +39,4 @@ do
 
 lftp -u $USERPASS ${HOST} -e "set net:timeout 10; set ssl:verify-certificate false; set ftp:ssl-allow no; mirror -c -f ${line} -O ~/Desktop/${DOMAIN}/${dir}; bye"
 done
+echo "Mirroring Completed, Successfully!"
